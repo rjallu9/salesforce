@@ -3,12 +3,12 @@ import { LightningElement, api, wire, track } from 'lwc';
 export default class CustomMultiPickList extends LightningElement {
 
     placeholder = '';
-    showDD=false;
+    showDD = false;
     init = false; 
     isExpanded = false;
     isSelectAll = false;
 
-    @api options=[];    
+    @api options = [];    
     @api label;
     @api required;
     @api showpills;
@@ -16,19 +16,18 @@ export default class CustomMultiPickList extends LightningElement {
     renderedCallback() {
         if(!this.init) {
             this.template.querySelector('.cmpl-input').addEventListener('click', (event) => {
-                if(this.showDD) {
-                    this.showDD = !this.showDD;
-                } else {
-                    let opts = this.options ? this.options.filter((element) => element.show).length : 0;
-                    this.showDD = opts > 0;
-                }
-                event.stopPropagation();
+                if(!this.showDD) {
+                    this.showDD = true;
+                    event.stopPropagation();
+                } 
             });
             this.template.addEventListener('click', (event) => {
                 event.stopPropagation();
             });
-            document.addEventListener('click', () => {
+            document.addEventListener('click', (e) => {
                 this.showDD = false;
+                this.template.querySelector('.cmpl-input').value = '';
+                this.options.forEach(option => { option.show =  true;});
             });
             this.init=true;
         }
@@ -54,11 +53,13 @@ export default class CustomMultiPickList extends LightningElement {
             this.options.find(option => option.label === event.target.value).checked = event.target.checked;
         } 
         this.postSelect();
+        event.stopPropagation();
     }
 
     onRemove(event) {
         this.options.find(option => option.label === event.detail.name).checked = false;
-        this.postSelect();        
+        this.postSelect();    
+        event.stopPropagation();    
     }
 
     postSelect() {

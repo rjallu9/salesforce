@@ -88,9 +88,10 @@ export default class CustomDataTable extends LightningElement {
         this.refreshButtons();   
 
         this.sortByUI = event.detail.fieldName;
+        this.sortDirection = event.detail.sortDirection;
 
-        this.sortBy = this.sortByUI == 'Link' ? 'Name:Text:'+event.detail.sortDirection : 
-                this.sortByUI +':'+ this.columns.find(ele => ele.fieldName == this.sortByUI).type + ':' + event.detail.sortDirection;      
+        this.sortBy = this.sortByUI == 'Link' ? 'Name:Text:'+this.sortDirection : 
+                this.sortByUI +':'+ this.columns.find(ele => ele.fieldName == this.sortByUI).type + ':' + this.sortDirection;      
     }
 
     get showBar() {
